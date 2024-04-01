@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -116,6 +118,14 @@ class Order
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $endedAt = null;
+
+    #[ORM\OneToMany(targetEntity: Aftersales::class, mappedBy: 'ord', orphanRemoval: true)]
+    private Collection $aftersales;
+
+    public function __construct()
+    {
+        $this->aftersales = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -526,6 +536,36 @@ class Order
     public function setEndedAt(?\DateTimeImmutable $endedAt): static
     {
         $this->endedAt = $endedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Aftersales>
+     */
+    public function getAftersales(): Collection
+    {
+        return $this->aftersales;
+    }
+
+    public function addAftersale(Aftersales $aftersale): static
+    {
+        if (!$this->aftersales->contains($aftersale)) {
+            $this->aftersales->add($aftersale);
+            $aftersale->setOrd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAftersale(Aftersales $aftersale): static
+    {
+        if ($this->aftersales->removeElement($aftersale)) {
+            // set the owning side to null (unless already changed)
+            if ($aftersale->getOrd() === $this) {
+                $aftersale->setOrd(null);
+            }
+        }
 
         return $this;
     }
