@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\GoodsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -70,10 +72,14 @@ class Goods
     #[ORM\Column]
     private ?bool $deleted = null;
 
+    #[ORM\OneToMany(targetEntity: Spec::class, mappedBy: 'goods', orphanRemoval: true)]
+    private Collection $specs;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->specs = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -293,6 +299,36 @@ class Goods
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Spec>
+     */
+    public function getSpecs(): Collection
+    {
+        return $this->specs;
+    }
+
+    public function addSpec(Spec $spec): static
+    {
+        if (!$this->specs->contains($spec)) {
+            $this->specs->add($spec);
+            $spec->setGoods($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpec(Spec $spec): static
+    {
+        if ($this->specs->removeElement($spec)) {
+            // set the owning side to null (unless already changed)
+            if ($spec->getGoods() === $this) {
+                $spec->setGoods(null);
+            }
+        }
 
         return $this;
     }
