@@ -1,0 +1,8 @@
+- Goods::brand
+- Goods::category
+- Spec::goods
+- Product::goods
+- Attrib::goods
+- Order::user
+
+# vim:ft=yaml
