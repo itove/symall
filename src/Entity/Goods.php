@@ -75,11 +75,15 @@ class Goods
     #[ORM\OneToMany(targetEntity: Spec::class, mappedBy: 'goods', orphanRemoval: true)]
     private Collection $specs;
 
+    #[ORM\OneToMany(targetEntity: Attrib::class, mappedBy: 'goods', orphanRemoval: true)]
+    private Collection $attribs;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->specs = new ArrayCollection();
+        $this->attribs = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -327,6 +331,36 @@ class Goods
             // set the owning side to null (unless already changed)
             if ($spec->getGoods() === $this) {
                 $spec->setGoods(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Attrib>
+     */
+    public function getAttribs(): Collection
+    {
+        return $this->attribs;
+    }
+
+    public function addAttrib(Attrib $attrib): static
+    {
+        if (!$this->attribs->contains($attrib)) {
+            $this->attribs->add($attrib);
+            $attrib->setGoods($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttrib(Attrib $attrib): static
+    {
+        if ($this->attribs->removeElement($attrib)) {
+            // set the owning side to null (unless already changed)
+            if ($attrib->getGoods() === $this) {
+                $attrib->setGoods(null);
             }
         }
 
