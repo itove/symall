@@ -122,9 +122,13 @@ class Order
     #[ORM\OneToMany(targetEntity: Aftersales::class, mappedBy: 'ord', orphanRemoval: true)]
     private Collection $aftersales;
 
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'ord', orphanRemoval: true)]
+    private Collection $orderItems;
+
     public function __construct()
     {
         $this->aftersales = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -564,6 +568,36 @@ class Order
             // set the owning side to null (unless already changed)
             if ($aftersale->getOrd() === $this) {
                 $aftersale->setOrd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderItem>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItem $orderItem): static
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setOrd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItem $orderItem): static
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getOrd() === $this) {
+                $orderItem->setOrd(null);
             }
         }
 

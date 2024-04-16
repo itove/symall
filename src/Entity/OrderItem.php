@@ -32,6 +32,10 @@ class OrderItem
     #[ORM\Column]
     private ?bool $deleted = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Order $ord = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +97,18 @@ class OrderItem
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    public function getOrd(): ?Order
+    {
+        return $this->ord;
+    }
+
+    public function setOrd(?Order $ord): static
+    {
+        $this->ord = $ord;
 
         return $this;
     }
