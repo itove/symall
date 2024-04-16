@@ -89,6 +89,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'customer', orphanRemoval: true)]
     private Collection $feedback;
 
+    #[ORM\OneToMany(targetEntity: Footprint::class, mappedBy: 'customer', orphanRemoval: true)]
+    private Collection $footprints;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -96,6 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->cart = new ArrayCollection();
         $this->userCoupons = new ArrayCollection();
         $this->feedback = new ArrayCollection();
+        $this->footprints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -473,6 +477,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($feedback->getCustomer() === $this) {
                 $feedback->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Footprint>
+     */
+    public function getFootprints(): Collection
+    {
+        return $this->footprints;
+    }
+
+    public function addFootprint(Footprint $footprint): static
+    {
+        if (!$this->footprints->contains($footprint)) {
+            $this->footprints->add($footprint);
+            $footprint->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFootprint(Footprint $footprint): static
+    {
+        if ($this->footprints->removeElement($footprint)) {
+            // set the owning side to null (unless already changed)
+            if ($footprint->getCustomer() === $this) {
+                $footprint->setCustomer(null);
             }
         }
 
