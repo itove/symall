@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\StoreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StoreRepository::class)]
@@ -26,6 +28,14 @@ class Store
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tel = null;
+
+    #[ORM\OneToMany(targetEntity: Goods::class, mappedBy: 'store')]
+    private Collection $goods;
+
+    public function __construct()
+    {
+        $this->goods = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +86,36 @@ class Store
     public function setTel(?string $tel): static
     {
         $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Goods>
+     */
+    public function getGoods(): Collection
+    {
+        return $this->goods;
+    }
+
+    public function addGood(Goods $good): static
+    {
+        if (!$this->goods->contains($good)) {
+            $this->goods->add($good);
+            $good->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGood(Goods $good): static
+    {
+        if ($this->goods->removeElement($good)) {
+            // set the owning side to null (unless already changed)
+            if ($good->getStore() === $this) {
+                $good->setStore(null);
+            }
+        }
 
         return $this;
     }

@@ -88,6 +88,9 @@ class Goods
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\ManyToOne(inversedBy: 'goods')]
+    private ?Store $store = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -428,6 +431,18 @@ class Goods
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): static
+    {
+        $this->store = $store;
 
         return $this;
     }
