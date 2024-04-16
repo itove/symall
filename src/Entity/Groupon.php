@@ -32,6 +32,10 @@ class Groupon
     #[ORM\Column]
     private ?bool $deleted = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?GrouponRule $rule = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +109,18 @@ class Groupon
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    public function getRule(): ?GrouponRule
+    {
+        return $this->rule;
+    }
+
+    public function setRule(?GrouponRule $rule): static
+    {
+        $this->rule = $rule;
 
         return $this;
     }
