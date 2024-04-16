@@ -83,11 +83,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'customer', orphanRemoval: true)]
     private Collection $cart;
 
+    #[ORM\OneToMany(targetEntity: UserCoupon::class, mappedBy: 'customer', orphanRemoval: true)]
+    private Collection $userCoupons;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->cart = new ArrayCollection();
+        $this->userCoupons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -405,6 +409,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($cart->getCustomer() === $this) {
                 $cart->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserCoupon>
+     */
+    public function getUserCoupons(): Collection
+    {
+        return $this->userCoupons;
+    }
+
+    public function addUserCoupon(UserCoupon $userCoupon): static
+    {
+        if (!$this->userCoupons->contains($userCoupon)) {
+            $this->userCoupons->add($userCoupon);
+            $userCoupon->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserCoupon(UserCoupon $userCoupon): static
+    {
+        if ($this->userCoupons->removeElement($userCoupon)) {
+            // set the owning side to null (unless already changed)
+            if ($userCoupon->getCustomer() === $this) {
+                $userCoupon->setCustomer(null);
             }
         }
 
