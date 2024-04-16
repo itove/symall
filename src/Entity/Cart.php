@@ -18,9 +18,6 @@ class Cart
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'cart', cascade: ['persist', 'remove'])]
-    private ?User $customer = null;
-
     #[ORM\ManyToMany(targetEntity: Goods::class)]
     private Collection $goods;
 
@@ -59,18 +56,6 @@ class Cart
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCustomer(): ?User
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?User $customer): static
-    {
-        $this->customer = $customer;
-
-        return $this;
     }
 
     /**

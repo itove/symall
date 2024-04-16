@@ -77,9 +77,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'customer', orphanRemoval: true)]
     private Collection $addresses;
 
-    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
-    private ?Cart $cart = null;
-
     #[ORM\OneToMany(targetEntity: Favorite::class, mappedBy: 'customer', orphanRemoval: true)]
     private Collection $favorites;
 
@@ -346,28 +343,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $address->setCustomer(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCart(): ?Cart
-    {
-        return $this->cart;
-    }
-
-    public function setCart(?Cart $cart): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($cart === null && $this->cart !== null) {
-            $this->cart->setCustomer(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($cart !== null && $cart->getCustomer() !== $this) {
-            $cart->setCustomer($this);
-        }
-
-        $this->cart = $cart;
 
         return $this;
     }
