@@ -6,6 +6,10 @@
   - notice
   - faq
   - news
+- Comment::type:
+  - node
+  - orderItem
+  - post
 
 - litemall_ad                  |
 - litemall_admin               |

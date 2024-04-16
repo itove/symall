@@ -38,6 +38,12 @@ class Comment
     #[ORM\Column]
     private ?bool $deleted = null;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $type = null;
+
+    #[ORM\Column]
+    private ?int $rid = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,6 +129,30 @@ class Comment
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getRid(): ?int
+    {
+        return $this->rid;
+    }
+
+    public function setRid(int $rid): static
+    {
+        $this->rid = $rid;
 
         return $this;
     }
