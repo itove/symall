@@ -92,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Footprint::class, mappedBy: 'customer', orphanRemoval: true)]
     private Collection $footprints;
 
+    #[ORM\OneToMany(targetEntity: Search::class, mappedBy: 'customer', orphanRemoval: true)]
+    private Collection $searches;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -100,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userCoupons = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->footprints = new ArrayCollection();
+        $this->searches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -507,6 +511,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($footprint->getCustomer() === $this) {
                 $footprint->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Search>
+     */
+    public function getSearches(): Collection
+    {
+        return $this->searches;
+    }
+
+    public function addSearch(Search $search): static
+    {
+        if (!$this->searches->contains($search)) {
+            $this->searches->add($search);
+            $search->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSearch(Search $search): static
+    {
+        if ($this->searches->removeElement($search)) {
+            // set the owning side to null (unless already changed)
+            if ($search->getCustomer() === $this) {
+                $search->setCustomer(null);
             }
         }
 
