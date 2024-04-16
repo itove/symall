@@ -125,6 +125,10 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'ord', orphanRemoval: true)]
     private Collection $orderItems;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $customer = null;
+
     public function __construct()
     {
         $this->aftersales = new ArrayCollection();
@@ -600,6 +604,18 @@ class Order
                 $orderItem->setOrd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCustomer(): ?User
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?User $customer): static
+    {
+        $this->customer = $customer;
 
         return $this;
     }
