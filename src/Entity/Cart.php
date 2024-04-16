@@ -48,6 +48,10 @@ class Cart
     #[ORM\Column]
     private ?bool $deleted = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cart')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $customer = null;
+
     public function __construct()
     {
         $this->goods = new ArrayCollection();
@@ -186,6 +190,18 @@ class Cart
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?User
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?User $customer): static
+    {
+        $this->customer = $customer;
 
         return $this;
     }
