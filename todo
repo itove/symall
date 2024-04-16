@@ -9,4 +9,27 @@
 - Groupon::user
 - Groupon::rule
 
+- litemall_ad                  |
+- litemall_admin               |
+
+- litemall_cart                |
+- litemall_collect             |
+- litemall_comment             |
+- litemall_coupon              |
+- litemall_coupon_user         |
+- litemall_feedback            |
+- litemall_footprint           |
+- litemall_groupon_rules       |
+- litemall_issue               |
+- litemall_keyword             |
+- litemall_notice              |
+- litemall_notice_admin        |
+- litemall_order_goods         |
+- litemall_permission          |
+- litemall_region              |
+- litemall_role                |
+- litemall_search_history      |
+- litemall_storage             |
+- litemall_system              |
+- litemall_topic               |
 # vim:ft=yaml
