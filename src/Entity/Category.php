@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,6 +48,14 @@ class Category
 
     #[ORM\Column]
     private ?bool $deleted = null;
+
+    #[ORM\OneToMany(targetEntity: Goods::class, mappedBy: 'category')]
+    private Collection $goods;
+
+    public function __construct()
+    {
+        $this->goods = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +190,36 @@ class Category
     public function setDeleted(bool $deleted): static
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Goods>
+     */
+    public function getGoods(): Collection
+    {
+        return $this->goods;
+    }
+
+    public function addGood(Goods $good): static
+    {
+        if (!$this->goods->contains($good)) {
+            $this->goods->add($good);
+            $good->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGood(Goods $good): static
+    {
+        if ($this->goods->removeElement($good)) {
+            // set the owning side to null (unless already changed)
+            if ($good->getCategory() === $this) {
+                $good->setCategory(null);
+            }
+        }
 
         return $this;
     }

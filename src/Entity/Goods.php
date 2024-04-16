@@ -81,6 +81,13 @@ class Goods
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'goods', orphanRemoval: true)]
     private Collection $products;
 
+    #[ORM\ManyToOne(inversedBy: 'goods')]
+    private ?Brand $brand = null;
+
+    #[ORM\ManyToOne(inversedBy: 'goods')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -397,6 +404,30 @@ class Goods
                 $product->setGoods(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
